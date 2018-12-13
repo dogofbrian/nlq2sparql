@@ -1,0 +1,223 @@
+neural machine translation (original?)
+@article{bahdanau2014neural,
+  title={Neural machine translation by jointly learning to align and translate},
+  author={Bahdanau, Dzmitry and Cho, Kyunghyun and Bengio, Yoshua},
+  journal={arXiv preprint arXiv:1409.0473},
+  year={2014}
+}
+
+a word to vector conversion is discussed
+distributed representation of words avoids the curse of dimensionality
+@article{bengio2003neural,
+  title={A neural probabilistic language model},
+  author={Bengio, Yoshua and Ducharme, R{\'e}jean and Vincent, Pascal and Jauvin, Christian},
+  journal={Journal of machine learning research},
+  volume={3},
+  number={Feb},
+  pages={1137--1155},
+  year={2003}
+}
+
+@inproceedings{daiber2013improving,
+  title={Improving efficiency and accuracy in multilingual entity extraction},
+  author={Daiber, Joachim and Jakob, Max and Hokamp, Chris and Mendes, Pablo N},
+  booktitle={Proceedings of the 9th International Conference on Semantic Systems},
+  pages={121--124},
+  year={2013},
+  organization={ACM}
+}
+
+Introduces the word2vec model
+two-layer neural net that converts text into vectors
+either by predicting a word based on the context words that surround it
+(continuous bag of words, CBOW)
+or predicting context words based on a word (Skip-gram).
+@article{DBLP:journals/corr/abs-1301-3781,
+  author    = {Tomas Mikolov and
+               Kai Chen and
+               Greg Corrado and
+               Jeffrey Dean},
+  title     = {Efficient Estimation of Word Representations in Vector Space},
+  journal   = {CoRR},
+  volume    = {abs/1301.3781},
+  year      = {2013},
+  url       = {http://arxiv.org/abs/1301.3781},
+  archivePrefix = {arXiv},
+  eprint    = {1301.3781},
+  timestamp = {Mon, 13 Aug 2018 16:48:33 +0200},
+  biburl    = {https://dblp.org/rec/bib/journals/corr/abs-1301-3781},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+using paraphrasing to map to question most likely to yield answer from Freebase
+@article{dong2017learning,
+  title={Learning to paraphrase for question answering},
+  author={Dong, Li and Mallinson, Jonathan and Reddy, Siva and Lapata, Mirella},
+  journal={arXiv preprint arXiv:1708.06022},
+  year={2017}
+}
+
+EARL framework
+@article{dubey2018earl,
+  title={EARL: Joint Entity and Relation Linking for Question Answering over Knowledge Graphs},
+  author={Dubey, Mohnish and Banerjee, Debayan and Chaudhuri, Debanjan and Lehmann, Jens},
+  journal={arXiv preprint arXiv:1801.03825},
+  year={2018}
+}
+
+Biperpedia - google and carnegie mellon researchers, looking to improve ontology
+source over FreeBase
+@article{gupta2014biperpedia,
+  title={Biperpedia: An ontology for search applications},
+  author={Gupta, Rahul and Halevy, Alon and Wang, Xuezhi and Whang, Steven Euijong and Wu, Fei},
+  journal={Proceedings of the VLDB Endowment},
+  volume={7},
+  number={7},
+  pages={505--516},
+  year={2014},
+  publisher={VLDB Endowment}
+}
+
+!DATASET
+DBNQA with 894,499 pairs of questions and SPARQL queries, based on DBPedia
+file:///Users/finbargood/Downloads/SPARQL_NEURAL_MACHINES_TEMPLATES.pdf
+@article{hartmanngenerating,
+  title={Generating a Large Dataset for Neural Question Answering over the DBpedia Knowledge Base},
+  author={Hartmann, Ann-Kathrin and Soru, Tommaso and Marx, Edgard}
+}
+
+@article{kim2014convolutional,
+  title={Convolutional neural networks for sentence classification},
+  author={Kim, Yoon},
+  journal={arXiv preprint arXiv:1408.5882},
+  year={2014}
+}
+
+seq2seq LISP programmer (the Neural Symbolic Machine) - not SPARQL
+@article{liang2016neural,
+  title={Neural symbolic machines: Learning semantic parsers on freebase with weak supervision},
+  author={Liang, Chen and Berant, Jonathan and Le, Quoc and Forbus, Kenneth D and Lao, Ni},
+  journal={arXiv preprint arXiv:1611.00020},
+  year={2016}
+}
+
+1st paper using pure NN to do NLQ => SPARQL
+@article{soru2017sparql,
+  title={SPARQL as a Foreign Language},
+  author={Soru, Tommaso and Marx, Edgard and Moussallem, Diego and Publio, Gustavo and Valdestilhas, Andr{\'e} and Esteves, Diego and Neto, Ciro Baron},
+  journal={arXiv preprint arXiv:1708.07624},
+  year={2017}
+}
+
+! reference paper
+2nd paper using pure NN to do NLQ => SPARQL
+@article{soru2018neural,
+  title={Neural Machine Translation for Query Construction and Composition},
+  author={Soru, Tommaso and Marx, Edgard and Valdestilhas, Andr{\'e} and Esteves, Diego and Moussallem, Diego and Publio, Gustavo},
+  journal={arXiv preprint arXiv:1806.10478},
+  year={2018}
+}
+
+mainly for a useful summary of pre-deep NN approaches to QA in the intro
+@article{stroh2016question,
+  title={Question Answering Using Deep Learning},
+  author={Stroh, Eylon and Student, SCPD and Mathur, Priyank},
+  year={2016}
+}
+
+Overview of definitions of knowledge graphs
+@inproceedings{ehrlinger2016towards,
+  title={Towards a Definition of Knowledge Graphs.},
+  author={Ehrlinger, Lisa and W{\"o}{\ss}, Wolfram},
+  booktitle={SEMANTiCS (Posters, Demos, SuCCESS)},
+  year={2016}
+}
+
+continuous bag of words: learn by predicting word based on context
+continuous skip gram: learn by predicting context from word
+word2vec described
+@inproceedings{mikolov2013linguistic,
+  title={Linguistic regularities in continuous space word representations},
+  author={Mikolov, Tomas and Yih, Wen-tau and Zweig, Geoffrey},
+  booktitle={Proceedings of the 2013 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies},
+  pages={746--751},
+  year={2013}
+}
+
+BLEU metric defined
+@inproceedings{papineni2002bleu,
+  title={BLEU: a method for automatic evaluation of machine translation},
+  author={Papineni, Kishore and Roukos, Salim and Ward, Todd and Zhu, Wei-Jing},
+  booktitle={Proceedings of the 40th annual meeting on association for computational linguistics},
+  pages={311--318},
+  year={2002},
+  organization={Association for Computational Linguistics}
+}
+
+!DATASET
+LC-QuAD, 5000 questions and SPARQL queries for the QALD initiative
+@inproceedings{trivedi2017lc,
+  title={Lc-quad: A corpus for complex question answering over knowledge graphs},
+  author={Trivedi, Priyansh and Maheshwari, Gaurav and Dubey, Mohnish and Lehmann, Jens},
+  booktitle={International Semantic Web Conference},
+  pages={210--218},
+  year={2017},
+  organization={Springer}
+}
+
+Template approach using semantic parsing
+@inproceedings{unger2012template,
+  title={Template-based question answering over RDF data},
+  author={Unger, Christina and B{\"u}hmann, Lorenz and Lehmann, Jens and Ngonga Ngomo, Axel-Cyrille and Gerber, Daniel and Cimiano, Philipp},
+  booktitle={Proceedings of the 21st international conference on World Wide Web},
+  pages={639--648},
+  year={2012},
+  organization={ACM}
+}
+
+Supervised learning, crafted approach of NLQ => SPARQL
+@inproceedings{Yahya:2012:NLQ:2390948.2390995,
+ author = {Yahya, Mohamed and Berberich, Klaus and Elbassuoni, Shady and Ramanath, Maya and Tresp, Volker and Weikum, Gerhard},
+ title = {Natural Language Questions for the Web of Data},
+ booktitle = {Proceedings of the 2012 Joint Conference on Empirical Methods in Natural Language Processing and Computational Natural Language Learning},
+ series = {EMNLP-CoNLL '12},
+ year = {2012},
+ location = {Jeju Island, Korea},
+ pages = {379--390},
+ numpages = {12},
+ url = {http://dl.acm.org/citation.cfm?id=2390948.2390995},
+ acmid = {2390995},
+ publisher = {Association for Computational Linguistics},
+ address = {Stroudsburg, PA, USA},
+}
+
+@misc{NSpM,
+    title={Neural SPARQL Machines},
+    howpublished= {\url{https://github.com/AKSW/NSpM}}
+}
+
+@misc{QALD,
+    title={Question Answering over Linked Data (QALD)},
+    howpublished= {\url{http://qald.aksw.org/}}
+}
+
+@misc{w3cSemanticWeb,
+    title={Semantic Web - W3C},
+    howpublished= {\url{https://www.w3.org/standards/semanticweb/}}
+}
+
+@misc{w3RDF,
+    title={Resource Description Framework (RDF)},
+    howpublished= {\url{https://www.w3.org/RDF/}}
+}
+
+Non-SPARQL specific requirements for RDF access of knowledge base
+@misc{w3RdfDataAccess,
+    title={RDF Data Access Use Cases and Requirements},
+    howpublished= {\url{https://www.w3.org/TR/rdf-dawg-uc/}}
+}
+
+@misc{w3cSPARQL,
+    title={SPARQL is a recommendation},
+    howpublished= {\url{https://www.w3.org/blog/SW/2008/01/15/sparql_is_a_recommendation/}}
+}
