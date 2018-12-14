@@ -24,3 +24,15 @@ report/capstone-report\.pdf
 report/capstone-report\.run\.xml
 
 report/capstone-report\.fdb_latexmk
+
+\.ipynb_checkpoints/capstone_project-checkpoint\.ipynb
+
+clean_query_inputs\.pkl
+
+clean_query_outputs\.pkl
+
+clean_questions\.pkl
+
+report/capstone-report\.blg
+
+report/capstone-report\.bbl

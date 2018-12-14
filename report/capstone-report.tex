@@ -8,6 +8,7 @@
 \usepackage{biblatex}
 \usepackage{courier}
 \usepackage{csquotes}
+\usepackage{enumerate}
 \usepackage{graphicx}
 \usepackage{listings}
 \usepackage{svg}
@@ -54,12 +55,9 @@ RDF (Resource Description Framework) graphs \cite{w3RDF} represent facts
 as a triple of IRIs or literal values. A triple consists of three parts:
 
 \begin{itemize}
-\item
-  a subject: a thing or class, referred to using an IRI
-\item
-  a predicate: a property or relationship of the subject
-\item
-  an object: either the value subject's property, or the target of
+\item a subject: a thing or class, referred to using an IRI
+\item a predicate: a property or relationship of the subject
+\item an object: either the value subject's property, or the target of
   relationship
 \end{itemize}
 
@@ -253,9 +251,10 @@ Here is an example entry from the dataset:
 
 In this exercise, we are only interested in 2 fields:
 
-\begin{enumerate}
-  \item \textbf{corrected_question}: the na
-\end{enumerate
+\begin{itemize}
+  \item corrected\_question: the natural language question
+  \item sparql\_query: the target SPARQL query
+\end{itemize}
 
 \textbf{Query}
 \begin{lstlisting}[language=SPARQL]
