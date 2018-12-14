@@ -176,3 +176,62 @@ Predicted SPARQL: count(?uri) where {?uri <http://www.w3.org/1999/02/22-rdf-synt
 
 3.2.2 test
 {'bleu_1': 0.0011682242990654207, 'bleu_2': 0.034179296351233165, 'bleu_3': 0.10555680496796557, 'bleu_4': 0.184876435359494}
+
+3. [64], [100], [64], ['adam'], [0.5], [0.5]
+
+3.1 samples
+Sample translation:
+Question: which is the nearest city to elliott bay
+Target SPARQL: select distinct ?uri where { <http://dbpedia.org/resource/elliott_bay> <http://dbpedia.org/ontology/nearestcity> ?uri } <end>
+Predicted SPARQL: select distinct ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/televisionshow>}
+
+Sample translation:
+Question: is north america one of the destinations of airtours airways
+Target SPARQL: ask where { <http://dbpedia.org/resource/airtours_international_airways> <http://dbpedia.org/ontology/destination> <http://dbpedia.org/resource/north_america> } <end>
+Predicted SPARQL: { ?x <http://dbpedia.org/ontology/birthplace> <http://dbpedia.org/resource/philosophy> . ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/person>}
+
+Sample translation:
+Question: what is the leading party in baraily which chandra shekhar too is associated with
+Target SPARQL: select distinct ?uri where { <http://dbpedia.org/resource/baraily> <http://dbpedia.org/ontology/leadername> ?uri. <http://dbpedia.org/resource/chandra_shekhar> <http://dbpedia.org/ontology/otherparty> ?uri} <end>
+Predicted SPARQL: select distinct ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/televisionshow>}
+
+Sample translation:
+Question: what is the layout of the automobiles designed by olivier boulay
+Target SPARQL: select distinct ?uri where { ?x <http://dbpedia.org/property/designer> <http://dbpedia.org/resource/olivier_boulay> . ?x <http://dbpedia.org/ontology/layout> ?uri . ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/automobile>} <end>
+Predicted SPARQL: select distinct ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/televisionshow>}
+
+Sample translation:
+Question: how many universities are there whose country's capital is oslo
+Target SPARQL: select distinct count(?uri) where { ?x <http://dbpedia.org/property/capital> <http://dbpedia.org/resource/oslo> . ?uri <http://dbpedia.org/ontology/country> ?x . ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/university>} <end>
+Predicted SPARQL: select distinct ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/televisionshow>}
+
+Sample translation:
+Question: give me some nominees of politicians in the us
+Target SPARQL: select distinct ?uri where { ?x <http://dbpedia.org/ontology/residence> <http://dbpedia.org/resource/united_states> . ?x <http://dbpedia.org/ontology/nominee> ?uri . ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/officeholder>} <end>
+Predicted SPARQL: {?uri <http://dbpedia.org/ontology/birthplace> <http://dbpedia.org/resource/statelessness> . }
+
+Sample translation:
+Question: what is the team name of st viator high school
+Target SPARQL: select distinct ?uri where { <http://dbpedia.org/resource/st._viator_high_school> <http://dbpedia.org/property/teamname> ?uri } <end>
+Predicted SPARQL: select distinct ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/televisionshow>}
+
+Sample translation:
+Question: which politicians died in cities built by the roman emperor charles 5
+Target SPARQL: select distinct ?uri where { ?x <http://dbpedia.org/ontology/builder> <http://dbpedia.org/resource/charles_v,_holy_roman_emperor> . ?uri <http://dbpedia.org/ontology/deathplace> ?x . ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/officeholder>} <end>
+Predicted SPARQL: select distinct ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/televisionshow>}
+
+Sample translation:
+Question: which kmascot od seneca academy is also the species of the fox and the cat
+Target SPARQL: select distinct ?uri where { <http://dbpedia.org/resource/the_fox_and_the_cat> <http://dbpedia.org/property/species> ?uri. <http://dbpedia.org/resource/seneca_academy_and_circle_school> <http://dbpedia.org/property/mascot> ?uri} <end>
+Predicted SPARQL: select distinct ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/televisionshow>}
+
+Sample translation:
+Question: trevor peacock has narrated in which movie
+Target SPARQL: select distinct ?uri where {?uri <http://dbpedia.org/property/narrator> <http://dbpedia.org/resource/trevor_peacock> . ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/film>} <end>
+Predicted SPARQL: select distinct ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/televisionshow>}
+
+3.2 BLEU
+3.2.1 training
+{'bleu_1': 0.035698812927822544, 'bleu_2': 0.18894129492470021, 'bleu_3': 0.32963529530513574, 'bleu_4': 0.4346737798909663}
+3.2.2 test
+{'bleu_1': 0.0441120061373226, 'bleu_2': 0.21002858409588585, 'bleu_3': 0.3537019201278453, 'bleu_4': 0.45828875623986876}
