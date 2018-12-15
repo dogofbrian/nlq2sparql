@@ -252,55 +252,73 @@ Here is an example entry from the dataset:
 In this exercise, we are only interested in 2 fields:
 
 \begin{itemize}
-  \item corrected\_question: the natural language question
-  \item sparql\_query: the target SPARQL query
+  \item 
+    corrected\_question: the natural language question. We will normalise these, 
+    making their case consistant, removing punctuation etc.
+  \item
+    sparql\_query: the target SPARQL query. This will consist of valid SPARQL statements,
+    where each token is well-formed. The only exception is that grouping or continuation 
+    symbols aren't forced to have space around them; we will enforce this so they are treated
+    as separate tokens. Otherwise we will not perform any normalization.
 \end{itemize}
-
-\textbf{Query}
-\begin{lstlisting}[language=SPARQL]
-  SELECT DISTINCT ?url
-  WHERE {
-    { ?x dbp:league dbr:Turkish\_Handball\_Super\_League . }
-    { ?x dbp:mascot ?uri }
-  }
-\end{lstlisting}
-
-\textbf{Normalised Natural Question Template}
-\begin{lstlisting}[]
-What is the mascot of the handball team whose
-league is Turkish Handball Super League?
-\end{lstlisting}
-
-\textbf{Corrected Question}
-\begin{lstlisting}[]
-What are the mascots of the teams participating in
-the turkish handball super league?
-\end{lstlisting}
 
 \subsection{Exploratory Visualization}\label{exploratory-visualization}
 
-In this section, you will need to provide some form of visualization
-that summarizes or extracts a relevant characteristic or feature about
-the data. The visualization should adequately support the data being
-used. Discuss why this visualization was chosen and how it is relevant.
-Questions to ask yourself when writing this section: - \emph{Have you
-visualized a relevant characteristic or feature about the dataset or
-input data?} - \emph{Is the visualization thoroughly analyzed and
-discussed?} - \emph{If a plot is provided, are the axes, title, and
-datum clearly defined?}
+\begin{figure}
+  \centering
+  \includegraphics{images/question_word_distribution.png}
+  \caption{Distribution of words in questions}
+  \label{fig:question_word_distribution}
+\end{figure}
 
-\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+\begin{figure}
+  \centering
+  \includegraphics{images/query_word_distribution.png}
+  \caption{Distribution of words in queries}
+  \label{fig:query_word_distribution}
+\end{figure}
 
-ideas:
+The word distribution characteristics of the NLQs and SPARQL statements differ
+in one significant respect: a small but significant number of SPARQL tokens
+are very frequent.
 
-\begin{itemize}
-\item
-  distribution of word frequencies
-\item
-  non-alpha chars
-\item
-  are there any ways to easily visualise word embedding distributions?
-\end{itemize}
+The distribution for NLQs is shown in figure \ref{fig:question_word_distribution}.
+We can see this follows the expected power law distribution.
+
+The distribution for SPARQL is a little different (see figure \ref{fig:query_word_distribution}).
+There are a significant number of tokens that are not distributed the same as the other
+tokens. This was mentioned already above: SPARQL statements are a mixture of a small number
+of keywords and a large number of identifiers of objects, predicates and literals, the things
+and relations that the queries are about. 
+
+The top 15 SPARQL tokens is given in table \ref{tbl:sparql_token_freq}. In addition to 
+the SPARQL keywords and punctuation, we also see the predicate for type (high in 
+frequncy as narrowing a query by type is so common) as well as a number of classes that
+may be due to a skewing caused by the method for their generation.
+
+\begin{table}
+  \centering
+  \begin{tabular}{ l | r }
+    \textbf{Word} & \textbf{Count} \\
+    \hline
+    \texttt{?uri} & 11010 \\
+    \texttt{.} & 6465 \\
+    \texttt{WHERE} & 5000 \\
+    \texttt{\{} & 5000 \\
+    \texttt{\}} & 5000 \\
+    \texttt{?x} & 4740 \\
+    \texttt{SELECT} & 4632 \\
+    \texttt{DISTINCT} & 4632 \\
+    \texttt{<http://www.w3.org/1999/02/22-rdf-syntax-ns\#type>} & 1925 \\
+    \texttt{COUNT(?uri)} & 658 \\
+    \texttt{ASK} & 368 \\
+    \texttt{<http://dbpedia.org/ontology/TelevisionShow>} & 236 \\
+    \texttt{<http://dbpedia.org/ontology/Person>} & 132 \\
+    \texttt{<http://dbpedia.org/ontology/Film>} & 113
+  \end{tabular}
+  \caption{Top 15 tokens by frequency in the SPARQL queries}
+  \label{tbl:sparql_token_freq}
+\end{table}
 
 \subsection{Algorithms and Techniques}\label{algorithms-and-techniques}
 
@@ -488,6 +506,23 @@ you used in this project?} - \emph{Were there algorithms or techniques
 you researched that you did not know how to implement, but would
 consider using if you knew how?} - \emph{If you used your final solution
 as the new benchmark, do you think an even better solution exists?}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+Options to improve (mention or try):
+
+attention
+dataset size
+deeper network
+pipeline:
+\begin{itemize}
+\item entity extract
+\item entity order, to match query parameter binding order e.g.
+are there more a than b in c? \(\Rightarrow\) [qry111, c, a, b]
+\item query categorization 
+\item template binding
+\item query categorization could also return a 
+\end{itemize}
 
 \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
 
