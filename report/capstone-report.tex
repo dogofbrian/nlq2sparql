@@ -10,6 +10,7 @@
 \usepackage{csquotes}
 \usepackage{enumerate}
 \usepackage{graphicx}
+\usepackage{hyperref}
 \usepackage{listings}
 \usepackage{svg}
 \usepackage{color}
@@ -30,16 +31,14 @@
 
 \title{Machine Learning Nanodegree: Capstone Project}
 \author{Finbar Good}
-\date{December 8, 2018}
+\date{December 15, 2018}
 
 \maketitle
    
 \setlength{\parindent}{0cm}
 \setlength{\parskip}{0.5\baselineskip}
 
-\section{I. Definition}\label{i.-definition}
-
-\emph{(approx. 1-2 pages)}
+\section{Definition}\label{i.-definition}
 
 \subsection{Project Overview}\label{project-overview}
 Since Google coined the term ``knowledge graph'', there has been an
@@ -179,33 +178,9 @@ I will use the BLEU metric to compare different training runs on the models.
 As SPARQL queries are not ``fault tolerant'', we will need high scores for n
 \textgreater{} 1.
 
-\section{II. Analysis}\label{ii.-analysis}
-
-\emph{(approx. 2-4 pages)}
+\section{Analysis}\label{ii.-analysis}
 
 \subsection{Data Exploration}\label{data-exploration}
-
-In this section, you will be expected to analyze the data you are using
-for the problem. This data can either be in the form of a dataset (or
-datasets), input data (or input files), or even an environment. The type
-of data should be thoroughly described and, if possible, have basic
-statistics and information presented (such as discussion of input
-features or defining characteristics about the input or environment).
-Any abnormalities or interesting qualities about the data that may need
-to be addressed have been identified (such as features that need to be
-transformed or the possibility of outliers). Questions to ask yourself
-when writing this section: - \emph{If a dataset is present for this
-problem, have you thoroughly discussed certain features about the
-dataset? Has a data sample been provided to the reader?} - \emph{If a
-dataset is present for this problem, are statistics about the dataset
-calculated and reported? Have any relevant results from this calculation
-been discussed?} - \emph{If a dataset is \textbf{not} present for this
-problem, has discussion been made about the input space or input data
-for your problem?} - \emph{Are there any abnormalities or
-characteristics about the input space or dataset that need to be
-addressed? (categorical variables, missing values, outliers, etc.)}
-
-\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
 
 The LC-QuAD dataset \cite{trivedi2017lc} was created
 for the QALD (Question Answering over Linked Data) initiative
@@ -322,237 +297,354 @@ may be due to a skewing caused by the method for their generation.
 
 \subsection{Algorithms and Techniques}\label{algorithms-and-techniques}
 
-In this section, you will need to discuss the algorithms and techniques
-you intend to use for solving the problem. You should justify the use of
-each one based on the characteristics of the problem and the problem
-domain. Questions to ask yourself when writing this section: - \emph{Are
-the algorithms you will use, including any default variables/parameters
-in the project clearly defined?} - \emph{Are the techniques to be used
-thoroughly discussed and justified?} - \emph{Is it made clear how the
-input data or datasets will be handled by the algorithms and techniques
-chosen?}
+The translation is done with a recurrent neural network (RNN), specifically an
+encoder-decoder composed of Long Short Term Memory (LSTM) layers. These RNNs have 
+been used to improve the "memory" of the network, so that the model can be
+trained to pick up on the larger scale patterns required to translate sentences
+of a dozen or more words.
 
-\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+I also add an embedding layer as it should improve the computational 
+efficiency of the input questions and queries. However, as the network is being
+trained to classify - that is to choose the best next token in the sequence -
+we are required to one-hot encode the predicted query. 
 
-2 diagrams of LSTM, training and inference
+The final decoder layer was a dense layer with softmax activation.
+
+I then reused the trained network to generate queries from questions. The question
+is fed to the encoder, whose LSTM state and a start token are passed to the decoder,
+to predict the first token of the query. We loop this until the decoder predicts an
+end token (or hits the maximum query length).
+
+I explored the effects of varying the following:
+
+\begin{itemize}
+  \item Batch size (size of batch between back propagation), to see the effect of speed of learning
+  \item Dropout, to see the degree to which we overfitting is a problem
+  \item Number of neurons, to explore where the sweet spot for over/underfitting might lie
+  \item Optimizer, to compare two that are recommended for LSTMs, Adam and rmsprop
+\end{itemize}
+
+The datasets are shuffled and split into training, validation and test sets.
+
+The training and prediction were done on GPUs.
 
 \subsection{Benchmark}\label{benchmark}
 
-In this section, you will need to provide a clearly defined benchmark
-result or threshold for comparing across performances obtained by your
-solution. The reasoning behind the benchmark (in the case where it is
-not an established result) should be discussed. Questions to ask
-yourself when writing this section: - \emph{Has some result or value
-been provided that acts as a benchmark for measuring performance?} -
-\emph{Is it clear how this result or value was obtained (whether by data
-or by hypothesis)?}
+I used the model described in \cite{soru2018neural} as the
+benchmark. It is also uses a neural network for end-to-end translation
+of NLQs to SPARQL queries - but is obviously more complex and subjected
+to many more refinements and iterations, possibly setting a rather
+unrealistically high bar. Nonetheless it was the only comparable exercise 
+I found that used the BLEU metric.
 
-\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+Depending on the refinement, they achieved BLEU scores between 80.89\%
+and 99.29\%. Their dataset was generated directly from DBPedia.
 
-I will be using the model described in \cite{soru2018neural} as the
-benchmark. It defines the approach I will use, but uses a different
-dataset. Both datasets were constructed from DBpedia, binding entities
-found in DBPedia to question-query templates. The paper shows a number
-of BLEU scores, one for each enhancement the team applied to their model
-or dataset pre-processing.
-
-\section{III. Methodology}\label{iii.-methodology}
-
-\emph{(approx. 3-5 pages)}
+\section{Methodology}\label{iii.-methodology}
 
 \subsection{Data Preprocessing}\label{data-preprocessing}
 
-In this section, all of your preprocessing steps will need to be clearly
-documented, if any were necessary. From the previous section, any of the
-abnormalities or characteristics that you identified about the dataset
-will be addressed and corrected here. Questions to ask yourself when
-writing this section: - \emph{If the algorithms chosen require
-preprocessing steps like feature selection or feature transformations,
-have they been properly documented?} - \emph{Based on the \textbf{Data
-Exploration} section, if there were abnormalities or characteristics
-that needed to be addressed, have they been properly corrected?} -
-\emph{If no preprocessing is needed, has it been made clear why?}
-
-\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+The data was downloaded from the
+\href{https://github.com/AskNowQA/LC-QuAD/}{GitHub pages of the LC-QuAD project}.
+I then processed the data as follows:
 
 \begin{itemize}
-\item
-  the source JSON format needs to be separated into the NLQ and SPARQL
-  sets
-\item
-  punctuation needs to be removed
-\item
-  the SPARQL queries need to be encoded (it consists of special
-  characters and urls as well as SPARQL keywords)
+  \item 
+    Consolidated the 2 files, their training and test datasets.
+  \item 
+    Loaded, parsed JSON into dict structure, and mapped the 
+    "corrected\_question" and "sparql\_query" fields to separate variables.
+  \item 
+    The NLQs were cleaned by setting to lowercase and removing punctuation.
+  \item 
+    I ensured that the SPARQL queries were properly tokenized, ensuring spaces
+    around grouping and continuation symbols.
+  \item
+    Two datasets were generated from the SPARQL queries: one set had a 
+    start token pre-pended, to use as inputs to the decoder; the other
+    had an end token append, to use as outputs.
+  \item 
+    All datasets were then tokenized.
 \end{itemize}
 
 \subsection{Implementation}\label{implementation}
 
-In this section, the process for which metrics, algorithms, and
-techniques that you implemented for the given data will need to be
-clearly documented. It should be abundantly clear how the implementation
-was carried out, and discussion should be made regarding any
-complications that occurred during this process. Questions to ask
-yourself when writing this section: - \emph{Is it made clear how the
-algorithms and techniques were implemented with the given datasets or
-input data?} - \emph{Were there any complications with the original
-metrics or techniques that required changing prior to acquiring a
-solution?} - \emph{Was there any part of the coding process (e.g.,
-writing complicated functions) that should be documented?}
+Implementation was done with a Jupyter notebook, running on TPUs on Colaboratory.
 
-\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+Following the data pre-processing:
 
-For this proposed project I will be taking the same approach as
-described in \cite{soru2018neural}, which is to use neural machine
-translation to predicate SPARQL from NLQ.
+\begin{itemize}
+  \item  
+    Sets of hyper-parameters were generated, for (1) number of neurons
+    [64, 128, 256] (2) batch size [32, 64] (3) optimizer ['adam', 'rmsprop'], 
+    and (4) dropout [none, 50\%]
+  \item
+    For each set, an encoder-decoder model was instantiated, and trained on 
+    the training set (split between training-validation-test was 81\%-9\%-10\%).
+    The training was run for 100 epochs (based on observations of the divergence
+    of training and validation loss, running for any longer wouldn't have been
+    worth it). As this is a classification problem, I used the categorical crossentropy
+    loss function. Although it is not as helpful as BLEU metric for gauging the 
+    fluency of translation, I also tracked the accuracy metric.
+  \item 
+    A plot of the loss function for training and validation sets was produced at
+    the end of the training run, mainly to gauge overfitting, the biggest problem
+    with a relatively small dataset.
+  \item 
+    The training and test datasets were then run through evaluator, which would 
+    generate predicted SPARQL queries for each NLQ in the datasets, and both
+    dump the translations (for inspection) and calculate 1-to-4 gram, weighted
+    BLEU scores.
+\end{itemize}
+
+As Colaboratory is a free platform with a time limit for use, the actual iterations
+through the hyper-parameter sets had to be restarted manually. As a result, the 
+BLEU metrics were consolidated in a selective fashion manually (only picking those
+that showed the main drivers in improvement to the BLEU scores).
 
 \subsection{Refinement}\label{refinement}
 
-In this section, you will need to discuss the process of improvement you
-made upon the algorithms and techniques you used in your implementation.
-For example, adjusting parameters for certain models to acquire improved
-solutions would fall under the refinement category. Your initial and
-final solutions should be reported, as well as any significant
-intermediate results as necessary. Questions to ask yourself when
-writing this section: - \emph{Has an initial solution been found and
-clearly reported?} - \emph{Is the process of improvement clearly
-documented, such as what techniques were used?} - \emph{Are intermediate
-and final solutions clearly reported as the process is improved?}
+The main challenge that became apparent was the inability of the model
+to generalize past the most common words, which were the SPARQL keywords
+and punctuation, plus a few predicates and classes that occur in many
+queries. You can see the signs of overfitting in figure \ref{fig:loss-metric-shows-overfitting}.
 
-\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+\begin{figure}
+  \centering
+  \includegraphics[width=12cm]{images/loss_model_256_100_64_adam_00_00.png}
+  \caption{Overfitting evident in the loss function}
+  \label{fig:loss-metric-shows-overfitting}
+\end{figure}
 
-\section{IV. Results}\label{iv.-results}
+I had already implemented a simple grid search of hyper-parameters from the start,
+but I augmented this with the addition of dropout (leaving it out was an oversight).
+This greatly improved the translations (although they remained far from useable,
+as we will see). 
 
-\emph{(approx. 2-3 pages)}
+\section{Results}\label{iv.-results}
 
 \subsection{Model Evaluation and Validation}\label{model-evaluation-and-validation}
 
-In this section, the final model and any supporting qualities should be
-evaluated in detail. It should be clear how the final model was derived
-and why this model was chosen. In addition, some type of analysis should
-be used to validate the robustness of this model and its solution, such
-as manipulating the input data or environment to see how the model's
-solution is affected (this is called sensitivity analysis). Questions to
-ask yourself when writing this section: - \emph{Is the final model
-reasonable and aligning with solution expectations? Are the final
-parameters of the model appropriate?} - \emph{Has the final model been
-tested with various inputs to evaluate whether the model generalizes
-well to unseen data?} - \emph{Is the model robust enough for the
-problem? Do small perturbations (changes) in training data or the input
-space greatly affect the results?} - \emph{Can results found from the
-model be trusted?}
+\begin{figure}
+  \centering
+  \includegraphics{images/encoder-decoder-training.pdf}
+  \caption{Encoder-Decoder model used in training}
+  \label{fig:encoder-decoder-training}
+\end{figure}
 
-\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+\begin{figure}
+  \centering
+  \includegraphics{images/encoder-decoder-translating.pdf}
+  \caption{Re-use of the trained model to carry out translation}
+  \label{fig:encoder-decoder-translating}
+\end{figure}
+
+Figures \ref{fig:encoder-decoder-training} and 
+\ref{fig:encoder-decoder-translating} for high-level view of the final training
+and translating models respectively.
+
+The final model/s were the result of my attempt to port the ideas in 
+a character-based translater described in 
+\href{https://blog.keras.io/a-ten-minute-introduction-to-sequence-to-sequence-learning-in-keras.html}{a blog on the Keras site},
+to a word-based version.
+
+The model's selling point was that it was able to handle sequences of
+arbitrary length, something necessary for the problem of arbitrary length
+questions. Although the final translations themselves were disappointingly 
+far from useable, the fact that after training on a relatively small 
+dataset (for a neural network) they were able to start predicting some
+of the features of a well formed query (for example, balanced parentheses),
+was impressive, and a vindication of exploring end-to-end translation with
+a neural network.
+
+Using grid search and with BLEU metric as the measure, the following were 
+the best hyper-parameters:
+
+\begin{enumerate}
+  \item neurons = 256 - lower neurons couldn't learn enough
+  \item batch size = 64 - although very little variation with this
+  \item optimiser = rmsprop - the difference with Adam was small
+  \item dropout = 0.5 - this had the biggest effect
+\end{enumerate}
+
+The BLEU scores were robust to repeated runs (which used random shuffles
+of the source dataset to compose training-validation-test). However,
+the metric failed to flag runs where the training fell into a sub-optimal
+minima: even with the above hyper-parameters, the training could fall
+in on just predicting the most common tokens over and over, and do that
+for \textit{all} input sentences.
 
 \subsection{Justification}\label{justification}
 
-In this section, your model's final solution and its results should be
-compared to the benchmark you established earlier in the project using
-some type of statistical analysis. You should also justify whether these
-results and the solution are significant enough to have solved the
-problem posed in the project. Questions to ask yourself when writing
-this section: - \emph{Are the final results found stronger than the
-benchmark result reported earlier?} - \emph{Have you thoroughly analyzed
-and discussed the final solution?} - \emph{Is the final solution
-significant enough to have solved the problem?}
+\begin{figure}
+  \centering
+  \includegraphics[width=14cm]{images/bleu_metrics.png}
+  \caption{BLEU Metrics}
+  \label{fig:bleu-metrics}
+\end{figure}
 
-\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+A comparison of the BLEU scores is shown in figure \ref{fig:bleu-metrics}.
+We see for the 4-gram BLEU score (evenly weighted) a value exceeding 70\%, 
+which when taking in to account the simplicity of the model and the small
+dataset, seems to compare well to the range of 80.89\%-99.28\% claimed in
+\cite{soru2018neural}.
 
-\section{V. Conclusion}\label{v.-conclusion}
+Our suspicions should be raised by the similarity between the scores
+for the training and test sets. Inspection of the translations gives us
+a clue as to the reason: the model is learning the common words found in
+the SPARQL queries, and some structural aspects of those queries, but is
+failing to learn the entities and predicates. The particular subsets of 
+entities and predicates are what vary between any two randomly selected
+sets; if the model is ignoring them, then it will perform equally well / 
+badly on each of them.
 
-\emph{(approx. 1-2 pages)}
+To be of use, the end-to-end approach will need significant refinement in
+the model, or improvement in the datasets to train on.
+
+\section{Conclusion}\label{v.-conclusion}
 
 \subsection{Free-Form Visualization}\label{free-form-visualization}
 
-In this section, you will need to provide some form of visualization
-that emphasizes an important quality about the project. It is much more
-free-form, but should reasonably support a significant result or
-characteristic about the problem that you want to discuss. Questions to
-ask yourself when writing this section: - \emph{Have you visualized a
-relevant or important quality about the problem, dataset, input data, or
-results?} - \emph{Is the visualization thoroughly analyzed and
-discussed?} - \emph{If a plot is provided, are the axes, title, and
-datum clearly defined?}
+The following are a few sample translations that were produced, produced 
+after the model had been trained with the best hyper-parameter set found:
 
-\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+\begin{lstlisting}[]
+
+  Question: 
+    what is the team name of st viator high school
+
+  Target: 
+    select distinct ?uri where {
+      <http://dbpedia.org/resource/st._viator_high_school> <http://dbpedia.org/property/teamname> ?uri 
+    }
+
+  Predicted:
+    select distinct ?uri where {
+      ?uri <http://dbpedia.org/ontology/associatedband> <http://dbpedia.org/resource/foxy_brown_(rapper)>
+    }
+
+\end{lstlisting}
+
+\begin{lstlisting}[]
+
+  Question:
+    how many universities are there whose country's capital is oslo
+
+  Target:
+    select distinct count(?uri) where {
+      ?x <http://dbpedia.org/property/capital> <http://dbpedia.org/resource/oslo> .
+      ?uri <http://dbpedia.org/ontology/country> ?x .
+      ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://dbpedia.org/ontology/university>
+    }
+
+  Predicted:
+    select distinct count(?uri) where {
+      ?uri <http://dbpedia.org/property/team> <http://dbpedia.org/resource/chicago_bulls> . 
+    }
+
+\end{lstlisting}
+
+You can see that it is predicting valid SPARQL statements, but throwing
+in totally unrelated entities and predicates. For a given training run,
+the entities and predicates would be drawn from a small set (usually 
+frequently occurring in the corpus).
+
+Here is an example from when one of the training runs went in the wrong direction:
+
+\begin{lstlisting}[]
+
+  Question:
+    name the nearest city to lake victoria
+
+  Target:
+    select distinct ?uri where {
+      <http://dbpedia.org/resource/lake_victoria> <http://dbpedia.org/ontology/nearestcity> ?uri
+    }
+
+  Predicted:
+    select distinct ?uri where ?uri . }
+
+\end{lstlisting}
+
+It is not valid SPARQL, and only consists of keywords, punctuation, or a commonly
+used variable name \(?uri\).
 
 \subsection{Reflection}\label{reflection}
 
-In this section, you will summarize the entire end-to-end problem
-solution and discuss one or two particular aspects of the project you
-found interesting or difficult. You are expected to reflect on the
-project as a whole to show that you have a firm understanding of the
-entire process employed in your work. Questions to ask yourself when
-writing this section: - \emph{Have you thoroughly summarized the entire
-process you used for this project?} - \emph{Were there any interesting
-aspects of the project?} - \emph{Were there any difficult aspects of the
-project?} - \emph{Does the final model and solution fit your
-expectations for the problem, and should it be used in a general setting
-to solve these types of problems?}
+In summary, these were the project steps:
 
-\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+\begin{enumerate}
+  \item 
+    The broad area of interest - searching a knowledge graph - was selected
+  \item 
+    A problem narrow and specific enough in the area was defined (can a fluent
+    search interface be created for an RDF graph)
+  \item
+    The largest, clean and freely accessible dataset pairing NLQs and SPARQL
+    queries was found
+  \item
+    The datasets were inspected for their characteristics, and appropriate cleaning
+    and tokenization was selected
+  \item
+    A survey of research in the area was done, looking for approaches that
+    leveraged something in my machine learning experience e.g. neural networks
+  \item
+    A published, character-based, non-fixed length translater was adapted to
+    work at the word-level, and constructed with Keras / Tensorflow
+  \item 
+    Different combinations of hyper-parameters were tested, suggesting the 
+    optimal combination
+  \item
+    A SPARQL predicter was used to generate translations, enabling the BLEU 
+    metric to examine fluency
+\end{enumerate}
+
+Construction of the translater was by far the most challenging aspect, and 
+the time it consumed prevented me for developing the model further. I never
+found a model implementation of a word-based encoder-decoder that was simple
+enough as a starting point. Small things like not being aware of the zero\_mask
+parameter cost many days of work!
+
+It was a very useful experience in learning the limitations of neural networks,
+but it also stimulated many ideas about it can be adapted to solve the problem
+of search in knowledge graphs.
 
 \subsection{Improvement}\label{improvement}
+If you wished to pursue the end-to-end neural machine translation 
+approach, you could consider the following to improve the performance:
 
-In this section, you will need to provide discussion as to how one
-aspect of the implementation you designed could be improved. As an
-example, consider ways your implementation can be made more general, and
-what would need to be modified. You do not need to make this
-improvement, but the potential solutions resulting from these changes
-are considered and compared/contrasted to your current solution.
-Questions to ask yourself when writing this section: - \emph{Are there
-further improvements that could be made on the algorithms or techniques
-you used in this project?} - \emph{Were there algorithms or techniques
-you researched that you did not know how to implement, but would
-consider using if you knew how?} - \emph{If you used your final solution
-as the new benchmark, do you think an even better solution exists?}
+\begin{enumerate}
+  \item 
+    Increase the dataset size by generating many times more questions
+    with larger entity and predicate sets, and more SPARQL templates
+  \item 
+    Play with deep, LSTM layers (Google Translate reportedly uses networks that are 8 deep) 
+    \cite{wu2016google}
+  \item
+    Add features like attention, to improve the "memory" of the network \cite{luong2015effective}
+\end{enumerate}
 
-\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+Translating NLQ to SPARQL has a couple of essential requirements that 
+probably don't apply as much to, say, french to english translations:
 
-Options to improve (mention or try):
+\begin{enumerate}
+  \item It must generate valid SPARQL
+  \item It must return results about the entities in their question
+\end{enumerate}
 
-attention
-dataset size
-deeper network
-pipeline:
-\begin{itemize}
-\item entity extract
-\item entity order, to match query parameter binding order e.g.
-are there more a than b in c? \(\Rightarrow\) [qry111, c, a, b]
-\item query categorization 
-\item template binding
-\item query categorization could also return a 
-\end{itemize}
+A simple approach to try to guarantee this would be to break the 
+translation down in to stages:
 
-\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+\begin{enumerate}
+  \item 
+    Entity extraction, so as to ensure these end up in the SPARQL query
+  \item 
+    Train a model to predict a specific SPARQL template from an NLQ, 
+    and populate with the entities (and predicates) extracted
+\end{enumerate}
 
-\textbf{Before submitting, ask yourself. . .}
-
-\begin{itemize}
-\item
-  Does the project report you've written follow a well-organized
-  structure similar to that of the project template?
-\item
-  Is each section (particularly \textbf{Analysis} and
-  \textbf{Methodology}) written in a clear, concise and specific
-  fashion? Are there any ambiguous terms or phrases that need
-  clarification?
-\item
-  Would the intended audience of your project be able to understand your
-  analysis, methods, and results?
-\item
-  Have you properly proof-read your project report to assure there are
-  minimal grammatical and spelling mistakes?
-\item
-  Are all the resources used for this project correctly cited and
-  referenced?
-\item
-  Is the code that implements your solution easily readable and properly
-  commented?
-\item
-  Does the code execute without error and produce results similar to
-  those reported?
-\end{itemize}
+This could be a rabbit hole, the kind that end-to-end NN translation
+neatly sidesteps, but something only more experimentation will prove.
 
 \printbibliography
    

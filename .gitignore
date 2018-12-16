@@ -1,4 +1,4 @@
-
+metrics/
 models/
 
 report/capstone-report\.synctex\.gz
@@ -19,8 +19,6 @@ report/capstone-report\.bcf
 
 report/capstone-report\.log
 
-report/capstone-report\.pdf
-
 report/capstone-report\.run\.xml
 
 report/capstone-report\.fdb_latexmk
@@ -36,3 +34,9 @@ clean_questions\.pkl
 report/capstone-report\.blg
 
 report/capstone-report\.bbl
+
+report/capstone-report\.out
+
+report/report-example-1\.pdf
+
+report/__latexindent_temp\.tex
